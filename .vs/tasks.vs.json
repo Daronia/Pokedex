@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "Task-package",
+      "appliesTo": "reactPokedex/pokedex/package.json",
+      "type": "launch"
+    }
+  ]
+}

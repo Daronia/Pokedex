@@ -1,30 +1,51 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 function App() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]); // handling pokemon json
-    const [count, setCount] = useState(1); // id of pokemon which is shown
+
+    const pokemonArray = []; // working on array for saving pokemon
+    const [tableContent, setTableContent] = useState([]);
+    const typesSet = new Set(); // working on set for saving occurding pokemon types
+    const [types, setTypes] = useState([]);
 
     const pokeBaseUrl = "https://pokeapi.co/api/v2/pokemon/";
 
-    // fetch poke data
-    useEffect(() => {
+
+    function fetchPokeData(count, max) {
+        if (count > max) {
+            setTableContent(pokemonArray);
+            setTypes(Array.from(typesSet));
+            return; // stop if max=n pokemon are fetched
+        }
         fetch(pokeBaseUrl + count.toString())
             .then(res => res.json())
             .then(
                 (result) => {
-                    setItems(result);
-                    setIsLoaded(true);
+                    pokemonArray.push(result); // save current pokemon
+                    for (let type of result.types) { // save all types that occure in pokemon fetched
+                        typesSet.add(type.type.name);
+                    }
+                    fetchPokeData(count + 1, max); // recursive
                 },
                 (error) => {
                     setError(error);
                     setIsLoaded(true);
-                }            )
-    }, [count]) // only re-run effect if count changes
+                })
+    }
 
+
+
+    // initialize
+    useEffect(() => {
+        fetchPokeData(1, 150);
+        setIsLoaded(true);
+    }, [])
+
+
+    // error handling
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -37,29 +58,34 @@ function App() {
           <header className="App-header">
               <h1>Pokedex</h1>
 
+              <div className="Filter">
+                  {/*insert all types*/}
+                  {types.map((type) =>
+                      <label key={type} htmlFor={type}>
+                          <input type="checkbox" id={type} />
+                          {type}
+                      </label>
+                      )}
+              </div>
+
               <div className="Catalog">
-                  <button onClick={() => {
-                      if (count > 1) setCount(count - 1);
-                  }
-                  }>Previous</button>
-                  <button onClick={() => {
-                      if (count < 150) setCount(count + 1);
-                  }
-                  }>Next</button>
                   <table>
                       <thead>
                           <tr>
+                              <th>Number</th>
                               <th>Picture</th>
                               <th>Name</th>
-                              <th>Number</th>
                           </tr>
                       </thead>
-                      <tbody>
-                          <tr>
-                              <td id="pic"><img src={items.sprites.front_default} alt={items.name} /></td>
-                              <td id="name">{items.name}</td>
-                              <td id="number">{items.id}</td>
-                          </tr>
+                      <tbody id="pokedexContent">
+                          {/*insert rows*/}
+                          {tableContent.map((pokemon) =>
+                              <tr key={pokemon.id}>
+                                  <td className="pId">{pokemon.id}</td>
+                                  <td className="pPic"><img src={pokemon.sprites.front_default} alt={pokemon.name} /></td>
+                                  <td className="pName">{pokemon.name}</td>
+                              </tr>
+                          )}
                       </tbody>  
                   </table>
               </div>

@@ -3,8 +3,9 @@
     "",
     "\\reactPokedex",
     "\\reactPokedex\\pokedex",
+    "\\reactPokedex\\pokedex\\public",
     "\\reactPokedex\\pokedex\\src"
   ],
-  "SelectedNode": "\\reactPokedex\\pokedex\\package.json",
+  "SelectedNode": "\\reactPokedex\\pokedex\\public",
   "PreviewInSolutionExplorer": false
 }

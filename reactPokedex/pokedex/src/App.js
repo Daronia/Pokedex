@@ -40,21 +40,26 @@ function App() {
 
 
 
-    function checkboxAction(e) {
+    function checkboxAction() {
         let checkboxes = document.getElementsByClassName("typeFilter");
         let checked = new Set();
         let withType = new Set();
+        let howManyHits = {};
         for (let c of checkboxes) { if (c.checked) checked.add(c); }
 
+        if (checked.size === 0) {
+            setTableContent(allPokemon);
+            return;
+        }
 
         
         for (let pokemon of allPokemon) {
+            howManyHits[pokemon] = 0;
             for (let type of pokemon.types) {
                 for (let c of checked) {
                     if (type.type.name === c.id) {
-                        withType.add(pokemon);
-                        console.log("Type: " + type.type.name + ", Checkbox: " + c.id);
-
+                        howManyHits[pokemon] = howManyHits[pokemon] + 1;
+                        if (howManyHits[pokemon] === checked.size) withType.add(pokemon);
                     }
                 }    
             }
@@ -89,7 +94,7 @@ function App() {
                   {/*insert all types*/}
                   {types.map((type) =>
                       <label key={type} htmlFor={type}>
-                          <input type="checkbox" id={type} className="typeFilter" onChange={e => checkboxAction(e)} />
+                          <input type="checkbox" id={type} className="typeFilter" onChange={checkboxAction} />
                           {type}
                       </label>
                       )}

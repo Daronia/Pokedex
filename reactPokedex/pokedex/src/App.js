@@ -6,17 +6,19 @@ function App() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const pokemonArray = []; // working on array for saving pokemon
-    const [tableContent, setTableContent] = useState([]);
-    const typesSet = new Set(); // working on set for saving occurding pokemon types
+    const pokemonSet = new Set(); // working on set for saving pokemon
+    const [allPokemon, setAllPokemon] = useState([]);
+    const typesSet = new Set(); // working on set for saving occurring pokemon types
     const [types, setTypes] = useState([]);
+    const [tableContent, setTableContent] = useState([]);
 
     const pokeBaseUrl = "https://pokeapi.co/api/v2/pokemon/";
 
 
     function fetchPokeData(count, max) {
         if (count > max) {
-            setTableContent(pokemonArray);
+            setAllPokemon(Array.from(pokemonSet));
+            setTableContent(Array.from(pokemonSet));
             setTypes(Array.from(typesSet));
             return; // stop if max=n pokemon are fetched
         }
@@ -24,7 +26,7 @@ function App() {
             .then(res => res.json())
             .then(
                 (result) => {
-                    pokemonArray.push(result); // save current pokemon
+                    pokemonSet.add(result); // save current pokemon
                     for (let type of result.types) { // save all types that occure in pokemon fetched
                         typesSet.add(type.type.name);
                     }
@@ -34,6 +36,37 @@ function App() {
                     setError(error);
                     setIsLoaded(true);
                 })
+    }
+
+
+
+    function filterTypes() {
+        let checkboxes = document.getElementsByClassName("typeFilter");
+        let checked = new Set(); // checked checkboxes
+        let withType = new Set(); // pokemons that have all types
+        let howManyHits = {}; // how many types equal from checked per pokemon
+
+        for (let c of checkboxes) { if (c.checked) checked.add(c); }
+
+        if (checked.size === 0) { // no filter needed
+            setTableContent(allPokemon);
+            return;
+        }
+        
+        for (let pokemon of allPokemon) { // look at each pokemon
+            howManyHits[pokemon] = 0;
+            for (let type of pokemon.types) { // go through all types the pokemon have (max 2)
+                for (let c of checked) {
+                    if (type.type.name === c.id) {
+                        howManyHits[pokemon] = howManyHits[pokemon] + 1;
+                        // if all types are found in pokemon -> add to table
+                        if (howManyHits[pokemon] === checked.size) withType.add(pokemon);
+                    }
+                }    
+            }
+        }
+
+        setTableContent(Array.from(withType));
     }
 
 
@@ -62,7 +95,7 @@ function App() {
                   {/*insert all types*/}
                   {types.map((type) =>
                       <label key={type} htmlFor={type}>
-                          <input type="checkbox" id={type} />
+                          <input type="checkbox" id={type} className="typeFilter" onChange={filterTypes} />
                           {type}
                       </label>
                       )}

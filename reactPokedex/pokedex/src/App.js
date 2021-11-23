@@ -1,4 +1,3 @@
-import './App.css';
 import { useState, useEffect } from 'react';
 
 
@@ -82,47 +81,70 @@ function App() {
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
-        return <div>Loading...</div>;
+        return (
+            <div className="d-flex justify-content-center">
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
     };
 
 
   return (
     <div className="App">
           <header className="App-header">
-              <h1>Pokedex</h1>
+              <div className="container">
+                  <div className="row g-2">
+                      <h1 className="display-1">Pokedex</h1>
 
-              <div className="Filter">
-                  {/*insert all types*/}
-                  {types.map((type) =>
-                      <label key={type} htmlFor={type}>
-                          <input type="checkbox" id={type} className="typeFilter" onChange={filterTypes} />
-                          {type}
-                      </label>
-                      )}
+                      <div className="col-9">
+                          <div className="Catalog">
+                              <div class="table-responsive">
+                                  <table className="table table-striped table-hover table-sm align-middle">
+
+                                      <thead>
+                                          <tr>
+                                              <th>Number</th>
+                                              <th>Picture</th>
+                                              <th>Name</th>
+                                          </tr>
+                                      </thead>
+
+                                      <tbody id="pokedexContent">
+                                          {/*insert rows*/}
+                                          {tableContent.map((pokemon) =>
+                                              <tr key={pokemon.id}>
+                                                  <td className="pId">{pokemon.id}</td>
+                                                  <td className="pPic"><img src={pokemon.sprites.front_default} className="img-fluid" alt={pokemon.name} /></td>
+                                                  <td className="pName">{pokemon.name}</td>
+                                              </tr>
+                                          )}
+                                      </tbody>
+
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div className="col-3">
+                          <div className="Filter">
+                              <div className="row">
+                                  <div className="row">
+                                      {/*insert all types*/}
+                                      {types.map((type) =>
+                                          <label key={type} htmlFor={type}>
+                                              <input type="checkbox" id={type} className="typeFilter" onChange={filterTypes} />
+                                              {" " + type}
+                                          </label>
+                                          )}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
               </div>
-
-              <div className="Catalog">
-                  <table>
-                      <thead>
-                          <tr>
-                              <th>Number</th>
-                              <th>Picture</th>
-                              <th>Name</th>
-                          </tr>
-                      </thead>
-                      <tbody id="pokedexContent">
-                          {/*insert rows*/}
-                          {tableContent.map((pokemon) =>
-                              <tr key={pokemon.id}>
-                                  <td className="pId">{pokemon.id}</td>
-                                  <td className="pPic"><img src={pokemon.sprites.front_default} alt={pokemon.name} /></td>
-                                  <td className="pName">{pokemon.name}</td>
-                              </tr>
-                          )}
-                      </tbody>  
-                  </table>
-              </div>
-
           </header>
     </div>
     );

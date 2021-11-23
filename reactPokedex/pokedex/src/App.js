@@ -6,17 +6,19 @@ function App() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const pokemonArray = []; // working on array for saving pokemon
-    const [tableContent, setTableContent] = useState([]);
-    const typesSet = new Set(); // working on set for saving occurding pokemon types
+    const pokemonSet = new Set(); // working on set for saving pokemon
+    const [allPokemon, setAllPokemon] = useState([]);
+    const typesSet = new Set(); // working on set for saving occurring pokemon types
     const [types, setTypes] = useState([]);
+    const [tableContent, setTableContent] = useState([]);
 
     const pokeBaseUrl = "https://pokeapi.co/api/v2/pokemon/";
 
 
     function fetchPokeData(count, max) {
         if (count > max) {
-            setTableContent(pokemonArray);
+            setAllPokemon(Array.from(pokemonSet));
+            setTableContent(Array.from(pokemonSet));
             setTypes(Array.from(typesSet));
             return; // stop if max=n pokemon are fetched
         }
@@ -24,7 +26,7 @@ function App() {
             .then(res => res.json())
             .then(
                 (result) => {
-                    pokemonArray.push(result); // save current pokemon
+                    pokemonSet.add(result); // save current pokemon
                     for (let type of result.types) { // save all types that occure in pokemon fetched
                         typesSet.add(type.type.name);
                     }
@@ -34,6 +36,23 @@ function App() {
                     setError(error);
                     setIsLoaded(true);
                 })
+    }
+
+
+
+    function checkboxAction(e) {
+        if (e.target.checked) {
+            let set = new Set();
+            for (let pokemon of allPokemon) {
+                for (let type of pokemon.types) {
+                    if (type.type.name === e.target.id) {
+                        console.log(pokemon.name);
+                        set.add(pokemon);
+                    }
+                }
+            }
+            setTableContent(Array.from(set));
+        } else setTableContent(allPokemon);
     }
 
 
@@ -62,7 +81,7 @@ function App() {
                   {/*insert all types*/}
                   {types.map((type) =>
                       <label key={type} htmlFor={type}>
-                          <input type="checkbox" id={type} />
+                          <input type="checkbox" id={type} onChange={e => checkboxAction(e)} />
                           {type}
                       </label>
                       )}

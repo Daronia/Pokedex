@@ -5,6 +5,7 @@ function App() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
+    const [pokeRange, setPokeRange] = useState([1, 150]); // load/show x to y pokemon, max=[1,898]
     const pokemonSet = new Set(); // working on set for saving pokemon
     const [allPokemon, setAllPokemon] = useState([]);
     const typesSet = new Set(); // working on set for saving occurring pokemon types
@@ -35,6 +36,28 @@ function App() {
                     setError(error);
                     setIsLoaded(true);
                 })
+    }
+
+
+    function changeAmount() {
+        let from = parseInt(document.getElementById("amountFrom").value);
+        let to = parseInt(document.getElementById("amountTo").value);
+
+        // limit by existing pokemon order and handling wrong user input
+        if (!(Number.isInteger(from) && Number.isInteger(to))) return;
+        if (from > to) {
+            let swap = from;
+            from = to;
+            to = swap;
+        }
+        if (from < 1) from = 1;           
+        if (to > 898) to = 898;
+
+        // set corrected values
+        document.getElementById("amountFrom").value = from;
+        document.getElementById("amountTo").value = to;
+
+        setPokeRange([from, to]);
     }
 
 
@@ -70,11 +93,11 @@ function App() {
 
 
 
-    // initialize
+    // initialize and update
     useEffect(() => {
-        fetchPokeData(1, 150);
+        fetchPokeData(pokeRange[0], pokeRange[1]);
         setIsLoaded(true);
-    }, [])
+    }, [pokeRange]) // reload if amount changes
 
 
     // error handling
@@ -95,12 +118,38 @@ function App() {
     <div className="App">
           <header className="App-header">
               <div className="container">
+
                   <div className="row g-2">
                       <h1 className="display-1">Pokedex</h1>
+                    
+
+                      <form>
+                          <div className="row g-3">
+                              <div className="col-1">
+                                  <input type="text" id="amountFrom" className="form-control" placeholder="From" aria-label="From" />
+                              </div>
+
+                              <div className="col-auto">
+                                  <text>-</text>
+                              </div>
+
+                              <div className="col-1">
+                                  <input type="text" id="amountTo" className="form-control" placeholder="To" aria-label="To" />
+                              </div>
+
+                              <div className="col">
+                                  <button type="button" className="btn btn-outline-primary" onClick={changeAmount}>Submit</button>
+                              </div>
+                          </div>
+                      </form>
 
                       <div className="col-9">
+
+                          
+
+
                           <div className="Catalog">
-                              <div class="table-responsive">
+                              <div className="table-responsive">
                                   <table className="table table-striped table-hover table-sm align-middle">
 
                                       <thead>

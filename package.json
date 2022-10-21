@@ -1,26 +1,20 @@
 {
   "name": "pokedex",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.15.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "bootstrap": "^5.1.3",
-    "express": "~4.17.1",
-    "jquery": "^3.6.0",
-    "path": "~0.12.7",
-    "popper": "^1.0.1",
-    "popper.js": "^1.16.1",
-    "react": "^17.0.2",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "13.4.0",
+    "@testing-library/user-event": "13.5.0",
+    "bootstrap": "^5.2.2",
+    "react": "18.2.0",
     "react-bootstrap": "^2.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "ts-loader": "~7.0.1",
-    "typescipt": "^1.0.0",
-    "typescript": "^3.8.3",
-    "web-vitals": "^1.1.2",
-    "webpack-cli": "~3.3.11"
+    "react-dom": "18.2.0",
+    "react-scripts": "^0.9.3",
+    "ts-loader": "7.0.1",
+    "typescipt": "1.0.0",
+    "typescript": "3.8.3",
+    "web-vitals": "2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,7 +30,7 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",350523
+      ">0.2%",
       "not dead",
       "not op_mini all"
     ],

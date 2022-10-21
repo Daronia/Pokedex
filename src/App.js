@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 
 function App() {
     const [error, setError] = useState(null);
@@ -190,7 +189,7 @@ function App() {
                                                 {tableContent.map((pokemon) =>
                                                     <tr key={pokemon.id}>
                                                         <th scope="row" className="pId text-end">{pokemon.id}</th>
-                                                        <td className="pPic" className="text-center">
+                                                        <td className="pPic text-center">
                                                             <img src={pokemon.sprites.front_default} className="img-fluid" alt={pokemon.name} />
                                                         </td>
                                                         <td className="pName">{pokemon.name}</td>
